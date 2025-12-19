@@ -11,12 +11,13 @@ long_description = readme_file.read_text() if readme_file.exists() else ""
 
 setup(
     name="shinigami-eye",
-    version="1.0.0",
-    author="SHINIGAMI-EYE Team",
+    version="2.0.0",
+    author="Mauro",
+    author_email="maauro.rs@gmail.com",
     description="All-Seeing Cybersecurity Framework for Network Reconnaissance and Security Intelligence",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/shinigami-eye",
+    url="https://github.com/maaurors/SHINIGAMI-EYE",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 4 - Beta",

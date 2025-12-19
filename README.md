@@ -2,7 +2,9 @@
 
 <div align="center">
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
+![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)
+![License](https://img.shields.io/badge/license-Educational-red.svg)
 ![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)
 ![License](https://img.shields.io/badge/license-Educational-red.svg)
 
@@ -67,6 +69,18 @@
 - **Markdown**: Human-readable documentation
 - **Terminal Output**: Real-time colored feedback
 
+### CVE Scanner (NEW in v2.0)
+- **Automated CVE Detection** from NVD database
+- **CVSS Scoring** with severity levels
+- **Version Matching** for discovered services
+- **Local Caching** for faster repeated scans
+
+### OSINT Integration (NEW in v2.0)
+- **Shodan Integration** for external intelligence
+- **VirusTotal Lookups** for domain reputation
+- **Geolocation** of IP addresses
+- **WHOIS Enrichment**
+
 ---
 
 ## Installation
@@ -125,6 +139,12 @@ shinigami-eye dns -d <domain>
 
 # Full scan (all modules)
 shinigami-eye full -t <target> -o report.html
+
+# CVE Scanner (v2.0)
+shinigami-eye cve -s Apache -v 2.4.29
+
+# OSINT Intelligence (v2.0)
+shinigami-eye osint -t <target>
 ```
 
 ---
