@@ -1,0 +1,32 @@
+# Complete Scan Profile
+# Maximum coverage and depth
+
+scanner:
+  timeout: 2.0
+  threads: 100
+  retries: 3
+  delay: 0.1
+
+port_scanner:
+  default_range: [1, 65535]  # All ports
+  grab_banners: true
+  service_detection: true
+
+web_recon:
+  timeout: 10
+  threads: 30
+
+dns:
+  timeout: 10
+  attempt_zone_transfer: true
+  check_dnssec: true
+  find_wildcard: true
+
+ssl:
+  timeout: 10
+  check_vulnerabilities: true
+  check_expiration: true
+
+advanced:
+  stealth_mode: false
+  random_delay: false

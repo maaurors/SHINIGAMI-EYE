@@ -1,0 +1,26 @@
+# Aggressive Scan Profile
+# Fast and comprehensive - maximum speed
+
+scanner:
+  timeout: 0.5
+  threads: 200
+  retries: 0
+  delay: 0
+
+port_scanner:
+  grab_banners: true
+  service_detection: true
+
+web_recon:
+  timeout: 3
+  threads: 50
+
+dns:
+  timeout: 3
+
+ssl:
+  timeout: 3
+
+advanced:
+  stealth_mode: false
+  random_delay: false

@@ -1,0 +1,21 @@
+# Stealth Scan Profile
+# Low and slow - minimize detection
+
+scanner:
+  timeout: 3.0
+  threads: 10
+  retries: 1
+  delay: 0.5          # Half-second delay between requests
+
+port_scanner:
+  grab_banners: false # Reduce fingerprinting
+  service_detection: false
+
+web_recon:
+  timeout: 10
+  threads: 5
+  follow_redirects: true
+
+advanced:
+  stealth_mode: true
+  random_delay: true
