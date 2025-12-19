@@ -18,6 +18,14 @@ from shinigami.modules.web_recon import WebRecon
 from shinigami.modules.ssl_analyzer import SSLAnalyzer
 from shinigami.modules.dns_enum import DNSEnumerator
 
+# v2.0 Enhancements
+from shinigami.modules.cve_scanner import CVEScanner
+from shinigami.modules.osint import OSINTCollector
+from shinigami.modules.web_screenshot import WebScreenshot
+
+import yaml
+from pathlib import Path
+
 logger = get_logger("CLI")
 
 
@@ -198,6 +206,122 @@ def cmd_full(args):
     return results
 
 
+def cmd_cve(args):
+    """Execute CVE vulnerability scan"""
+    print_module_header("CVE SCANNER")
+    
+    scanner = CVEScanner()
+    
+    results = {
+        'target': args.service,
+        'version': args.version,
+        'timestamp': datetime.now().isoformat(),
+        'report_type': 'CVE Scan'
+    }
+    
+    logger.info(f"Scanning {args.service} {args.version} for CVEs...")
+    cves = scanner.scan_service(args.service, args.version)
+    
+    if cves:
+        print(f"\n{Colors.RED}Found {len(cves)} CVEs:{Colors.END}\n")
+        for cve in cves:
+            severity_color = {
+                'CRITICAL': Colors.RED,
+                'HIGH': Colors.BOLD + Colors.RED,
+                'MEDIUM': Colors.YELLOW,
+                'LOW': Colors.CYAN,
+                'UNKNOWN': Colors.GRAY
+            }.get(cve.severity, Colors.END)
+            
+            print(f"{severity_color}{cve.cve_id}{Colors.END} ({cve.severity} - {cve.cvss_score}/10.0)")
+            print(f"  {cve.description[:150]}...")
+            print()
+    else:
+        print(f"\n{Colors.GREEN}✓ No CVEs found{Colors.END}\n")
+    
+    results['cves'] = [cve.to_dict() for cve in cves]
+    
+    # Save report if requested
+    if args.output:
+        generate_report(results, args.format, args.output)
+    
+    return results
+
+
+def cmd_osint(args):
+    """Execute OSINT intelligence gathering"""
+    print_module_header("OSINT INTELLIGENCE GATHERING")
+    
+    # Load API keys from config
+    api_keys = _load_api_keys()
+    
+    collector = OSINTCollector(
+        shodan_key=api_keys.get('shodan_api_key'),
+        vt_key=api_keys.get('virustotal_api_key')
+    )
+    
+    logger.info(f"Gathering intelligence for {args.target}...")
+    
+    results = collector.gather_intelligence(
+        args.target,
+        enable_shodan=args.osint_all or args.shodan,
+        enable_vt=args.osint_all or args.virustotal,
+        enable_geo=not args.skip_geo
+    )
+    
+    # Print results
+    print(f"\n{Colors.BOLD}IP Address:{Colors.END} {results.get('ip_address', 'N/A')}\n")
+    
+    if 'geolocation' in results and results['geolocation']:
+        geo = results['geolocation']
+        if not geo.get('error'):
+            print(f"{Colors.BOLD}Geolocation:{Colors.END}")
+            print(f"  Location: {geo.get('city')}, {geo.get('country')}")
+            print(f"  Coordinates: {geo.get('latitude')}, {geo.get('longitude')}")
+            print(f"  ISP: {geo.get('isp')}")
+            print()
+    
+    if 'shodan' in results and results['shodan']:
+        shodan = results['shodan']
+        if not shodan.get('error'):
+            print(f"{Colors.BOLD}Shodan Data:{Colors.END}")
+            print(f"  Organization: {shodan.get('organization')}")
+            print(f"  ASN: {shodan.get('asn')}")
+            print(f"  Open Ports: {', '.join(map(str, shodan.get('ports', [])))}")
+            print()
+        else:
+            print(f"{Colors.YELLOW}Shodan: {shodan['error']}{Colors.END}\n")
+    
+    if 'virustotal' in results and results['virustotal']:
+        vt = results['virustotal']
+        if not vt.get('error'):
+            print(f"{Colors.BOLD}VirusTotal:{Colors.END}")
+            print(f"  Malicious: {vt.get('malicious', 0)}")
+            print(f"  Suspicious: {vt.get('suspicious', 0)}")
+            print(f"  Clean: {vt.get('clean', 0)}")
+            print()
+        else:
+            print(f"{Colors.YELLOW}VirusTotal: {vt['error']}{Colors.END}\n")
+    
+    # Save report if requested
+    if args.output:
+        generate_report(results, args.format, args.output)
+    
+    return results
+
+
+def _load_api_keys():
+    """Load API keys from config file"""
+    config_path = Path('config/api_keys.yaml')
+    if config_path.exists():
+        try:
+            with open(config_path, 'r') as f:
+                return yaml.safe_load(f) or {}
+        except:
+            return {}
+    return {}
+
+
 def main():
     """Main CLI entry point"""
     
@@ -274,6 +398,23 @@ def main():
     dns_parser.add_argument('-o', '--output', help='Output file')
     dns_parser.add_argument('-f', '--format', choices=['json', 'html', 'md'], default='json', help='Output format')
     
+    # CVE Scanner Command (v2.0)
+    cve_parser = subparsers.add_parser('cve', help='CVE vulnerability scanner')
+    cve_parser.add_argument('-s', '--service', required=True, help='Service name (e.g., Apache, OpenSSH)')
+    cve_parser.add_argument('-v', '--version', required=True, help='Service version (e.g., 2.4.29)')
+    cve_parser.add_argument('-o', '--output', help='Output file')
+    cve_parser.add_argument('-f', '--format', choices=['json', 'html', 'md'], default='json', help='Output format')
+    
+    # OSINT Command (v2.0)
+    osint_parser = subparsers.add_parser('osint', help='OSINT intelligence gathering')
+    osint_parser.add_argument('-t', '--target', required=True, help='Target domain or IP')
+    osint_parser.add_argument('--shodan', action='store_true', help='Query Shodan')
+    osint_parser.add_argument('--virustotal', action='store_true', help='Query VirusTotal')
+    osint_parser.add_argument('--osint-all', action='store_true', help='Query all OSINT sources')
+    osint_parser.add_argument('--skip-geo', action='store_true', help='Skip geolocation lookup')
+    osint_parser.add_argument('-o', '--output', help='Output file')
+    osint_parser.add_argument('-f', '--format', choices=['json', 'html', 'md'], default='json', help='Output format')
+    
     # Full Scan Command
     full_parser = subparsers.add_parser('full', help='Full scan (all modules)')
     full_parser.add_argument('-t', '--target', required=True, help='Target domain or IP')
@@ -306,6 +447,10 @@ def main():
             cmd_ssl(args)
         elif args.command == 'dns':
             cmd_dns(args)
+        elif args.command == 'cve':  # v2.0
+            cmd_cve(args)
+        elif args.command == 'osint':  # v2.0
+            cmd_osint(args)
         elif args.command == 'full':
             cmd_full(args)
         
