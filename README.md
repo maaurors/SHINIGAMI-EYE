@@ -294,9 +294,8 @@ This project is licensed for **Educational Use Only**. See the `LICENSE` file fo
 
 ## Support
 
-- Email: support@shinigami-eye.io
+- Email: maauro.rs@gmail.com
 - Issues: [GitHub Issues](https://github.com/maaurors/SHINIGAMI-EYE/issues)
-- Discord: [Join our server](https://discord.gg/shinigami-eye)
 
 ---
 
