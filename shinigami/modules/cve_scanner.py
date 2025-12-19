@@ -213,114 +213,102 @@ class CVEScanner:
         return ""
     
     def _query_nvd(self, product: str, version: str) -> List[CVE]:
-        """Query NVD API for CVEs using keyword search"""
+        """Query NVD API for CVEs - no restrictive filtering"""
         try:
-            # Use keyword search instead of CPE (more reliable)
-            # Construct search query
-            search_terms = f"{product} {version}".strip()
+            # Try multiple query approaches for best coverage
+            all_cves = []
             
-            params = {
-                'keywordSearch': search_terms,
-                'resultsPerPage': 20
-            }
+            # Query 1: Product + version
+            queries = [
+                f"{product} {version}",
+                f"{product.replace('_', ' ')} {version}",
+            ]
             
-            response = self.session.get(
-                self.nvd_api_base,
-                params=params,
-                timeout=10
-            )
-            
-            if response.status_code != 200:
-                return []
-            
-            data = response.json()
-            cves = []
-            
-            for vuln in data.get('vulnerabilities', []):
-                cve_data = vuln.get('cve', {})
-                cve_id = cve_data.get('id', '')
+            for search_terms in queries:
+                params = {
+                    'keywordSearch': search_terms,
+                    'resultsPerPage': 50
+                }
                 
-                # Get description
-                descriptions = cve_data.get('descriptions', [])
-                description = ''
-                for desc in descriptions:
-                    if desc.get('lang') == 'en':
-                        description = desc.get('value', '')
-                        break
-                if not description and descriptions:
-                    description = descriptions[0].get('value', '')
-                
-                # Filter by relevance (check if product/version mentioned)
-                # Make this less strict - check description OR product name match
-                description_lower = description.lower()
-                product_lower = product.lower()
-                
-                # Check if product is mentioned
-                product_mentioned = (
-                    product_lower in description_lower or
-                    product.replace('_', ' ').lower() in description_lower or
-                    self._normalize_product_name(product).lower() in description_lower
+                response = self.session.get(
+                    self.nvd_api_base,
+                    params=params,
+                    timeout=15
                 )
                 
-                # Check if version is mentioned (more lenient)
-                version_mentioned = (
-                    version in description_lower or
-                    version in cve_id or
-                    f"version {version}" in description_lower or
-                    f"versions {version}" in description_lower
-                )
-                
-                # Skip if neither product nor version is relevant
-                if not product_mentioned and not version_mentioned:
+                if response.status_code != 200:
                     continue
                 
-                # Get CVSS score
-                metrics = cve_data.get('metrics', {})
-                cvss_score = 0.0
-                severity = "UNKNOWN"
+                data = response.json()
                 
-                # Try CVSS v3.1 first
-                if 'cvssMetricV31' in metrics and metrics['cvssMetricV31']:
-                    cvss_data = metrics['cvssMetricV31'][0]['cvssData']
-                    cvss_score = cvss_data.get('baseScore', 0.0)
-                    severity = cvss_data.get('baseSeverity', 'UNKNOWN')
-                # Fall back to CVSS v3.0
-                elif 'cvssMetricV30' in metrics and metrics['cvssMetricV30']:
-                    cvss_data = metrics['cvssMetricV30'][0]['cvssData']
-                    cvss_score = cvss_data.get('baseScore', 0.0)
-                    severity = cvss_data.get('baseSeverity', 'UNKNOWN')
-                # Fall back to CVSS v2
-                elif 'cvssMetricV2' in metrics and metrics['cvssMetricV2']:
-                    cvss_score = metrics['cvssMetricV2'][0]['cvssData'].get('baseScore', 0.0)
-                    severity = self._cvss_to_severity(cvss_score)
+                for vuln in data.get('vulnerabilities', []):
+                    cve_data = vuln.get('cve', {})
+                    cve_id = cve_data.get('id', '')
+                    
+                    # Skip if already added
+                    if any(c.cve_id == cve_id for c in all_cves):
+                        continue
+                    
+                    # Get description (prefer English)
+                    descriptions = cve_data.get('descriptions', [])
+                    description = ''
+                    for desc in descriptions:
+                        if desc.get('lang') == 'en':
+                            description = desc.get('value', '')
+                            break
+                    if not description and descriptions:
+                        description = descriptions[0].get('value', '')
+                    
+                    # Get CVSS score from any available version
+                    metrics = cve_data.get('metrics', {})
+                    cvss_score = 0.0
+                    severity = "UNKNOWN"
+                    
+                    # Try CVSS v3.1
+                    if 'cvssMetricV31' in metrics and metrics['cvssMetricV31']:
+                        cvss_data = metrics['cvssMetricV31'][0]['cvssData']
+                        cvss_score = cvss_data.get('baseScore', 0.0)
+                        severity = cvss_data.get('baseSeverity', 'UNKNOWN')
+                    # Try CVSS v3.0
+                    elif 'cvssMetricV30' in metrics and metrics['cvssMetricV30']:
+                        cvss_data = metrics['cvssMetricV30'][0]['cvssData']
+                        cvss_score = cvss_data.get('baseScore', 0.0)
+                        severity = cvss_data.get('baseSeverity', 'UNKNOWN')
+                    # Fall back to CVSS v2
+                    elif 'cvssMetricV2' in metrics and metrics['cvssMetricV2']:
+                        cvss_score = metrics['cvssMetricV2'][0]['cvssData'].get('baseScore', 0.0)
+                        severity = self._cvss_to_severity(cvss_score)
+                    
+                    # Include CVEs with any score (don't filter by score=0)
+                    # Some valid CVEs might not have scores yet
+                    
+                    # Get references
+                    references = []
+                    for ref in cve_data.get('references', []):
+                        references.append(ref.get('url', ''))
+                    
+                    # Published date
+                    published = cve_data.get('published', '')
+                    
+                    cve = CVE(
+                        cve_id=cve_id,
+                        description=description[:250],
+                        cvss_score=cvss_score,
+                        severity=severity if cvss_score > 0 else "UNKNOWN",
+                        published_date=published,
+                        references=references[:5]
+                    )
+                    
+                    all_cves.append(cve)
                 
-                # Only include if we have a score
-                if cvss_score == 0.0:
-                    continue
-                
-                # Get references
-                references = []
-                for ref in cve_data.get('references', []):
-                    references.append(ref.get('url', ''))
-                
-                # Published date
-                published = cve_data.get('published', '')
-                
-                cve = CVE(
-                    cve_id=cve_id,
-                    description=description[:200],  # Truncate
-                    cvss_score=cvss_score,
-                    severity=severity,
-                    published_date=published,
-                    references=references[:3]  # Limit references
-                )
-                
-                cves.append(cve)
+                # If we found CVEs with first query, don't need second
+                if all_cves:
+                    break
             
-            # Sort by CVSS score (highest first)
-            cves.sort(key=lambda x: x.cvss_score, reverse=True)
+            # Sort by CVSS score (highest first), then by CVE ID (newest first)
+            all_cves.sort(key=lambda x: (x.cvss_score, x.cve_id), reverse=True)
             
-            return cves[:10]  # Return top 10
+            return all_cves[:20]  # Return top 20
             
         except Exception as e:
             print(f"NVD API error: {e}")
