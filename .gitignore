@@ -45,6 +45,11 @@ reports/*.md
 *.key
 config/credentials.yaml
 config/secrets.yaml
+config/api_keys.yaml
+
+# v2.0: CVE Database
+data/
+*.db
 
 # Logs
 *.log
