@@ -10,58 +10,58 @@
 
 *Network Reconnaissance • Security Intelligence • Vulnerability Assessment*
 
-[Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [Examples](#-examples) • [Disclaimer](#%EF%B8%8F-disclaimer)
+[Features](#features) • [Installation](#installation) • [Usage](#usage) • [Examples](#examples) • [Disclaimer](#disclaimer)
 
 </div>
 
 ---
 
-## 🎯 Overview
+## Overview
 
 **SHINIGAMI-EYE** (神死眼 - "The Eye of the Death God") is a next-generation, all-in-one cybersecurity framework designed for comprehensive network reconnaissance and security intelligence gathering. Inspired by anime aesthetics and built with cutting-edge technology, it combines multiple security tools into a unified, powerful platform.
 
 ### Why SHINIGAMI-EYE?
 
-- **🔍 All-in-One**: Port scanning, web recon, SSL analysis, DNS enumeration - all in one tool
-- **⚡ Lightning Fast**: Multi-threaded scanning with configurable performance
-- **🎨 Beautiful Output**: Rich terminal UI with colored output and epic ASCII art
-- **📊 Professional Reports**: Generate HTML, JSON, and Markdown reports
-- **🌐 Cross-Platform**: Works seamlessly on Windows, Linux, and macOS
-- **🛡️ Security Focused**: Built by security professionals for security professionals
+- **All-in-One**: Port scanning, web recon, SSL analysis, DNS enumeration - all in one tool
+- **Lightning Fast**: Multi-threaded scanning with configurable performance
+- **Beautiful Output**: Rich terminal UI with colored output and epic ASCII art
+- **Professional Reports**: Generate HTML, JSON, and Markdown reports
+- **Cross-Platform**: Works seamlessly on Windows, Linux, and macOS
+- **Security Focused**: Built by security professionals for security professionals
 
 ---
 
-## ✨ Features
+## Features
 
-### 🔌 Port Scanner
+### Port Scanner
 - **TCP Connect Scanning** with multi-threading
 - **Service Detection** and version identification
 - **Banner Grabbing** for fingerprinting
 - **Common Ports** and custom range support
 - Configurable timeout and thread count
 
-### 🌐 Web Reconnaissance
+### Web Reconnaissance
 - **Subdomain Enumeration** via DNS and brute-force
 - **Technology Detection** (CMS, frameworks, libraries)
 - **Security Headers Analysis**
 - **Directory Discovery**
 - **Responsive Web Scraping**
 
-### 🔐 SSL/TLS Analyzer
+### SSL/TLS Analyzer
 - **Certificate Inspection** (validity, issuer, expiration)
 - **Cipher Suite Analysis**
 - **Vulnerability Detection** (Heartbleed, POODLE, BEAST)
 - **Weak Encryption Identification**
 - **DNSSEC Validation**
 
-### 📊 DNS Enumerator
+### DNS Enumerator
 - **Comprehensive Record Queries** (A, AAAA, MX, TXT, NS, SOA, etc.)
 - **Zone Transfer Attempts** (AXFR)
 - **Reverse DNS Lookups**
 - **DNSSEC Configuration Check**
 - **Wildcard Detection**
 
-### 📄 Advanced Reporting
+### Advanced Reporting
 - **HTML Reports**: Beautiful, interactive HTML dashboards
 - **JSON Export**: Machine-readable structured data
 - **Markdown**: Human-readable documentation
@@ -69,7 +69,7 @@
 
 ---
 
-## 📦 Installation
+## Installation
 
 ### Prerequisites
 - Python 3.8 or higher
@@ -79,16 +79,16 @@
 
 #### On Linux/macOS:
 ```bash
-git clone https://github.com/yourusername/shinigami-eye.git
-cd shinigami-eye
+git clone https://github.com/maaurors/SHINIGAMI-EYE.git
+cd SHINIGAMI-EYE
 chmod +x install.sh
 ./install.sh
 ```
 
 #### On Windows:
 ```cmd
-git clone https://github.com/yourusername/shinigami-eye.git
-cd shinigami-eye
+git clone https://github.com/maaurors/SHINIGAMI-EYE.git
+cd SHINIGAMI-EYE
 install.bat
 ```
 
@@ -103,7 +103,7 @@ pip3 install -e .
 
 ---
 
-## 🚀 Usage
+## Usage
 
 ### Basic Commands
 
@@ -129,7 +129,7 @@ shinigami-eye full -t <target> -o report.html
 
 ---
 
-## 📚 Examples
+## Examples
 
 ### 1. Quick Port Scan
 Scan common ports on a target:
@@ -169,7 +169,7 @@ shinigami-eye full -t example.com -f html -o full_assessment.html
 
 ---
 
-## 🎨 Features Showcase
+## Features Showcase
 
 ### Epic ASCII Banner
 ```
@@ -184,20 +184,20 @@ shinigami-eye full -t example.com -f html -o full_assessment.html
 ```
 
 ### Rich Terminal Output
-- ✅ Color-coded status messages
-- 📊 Real-time progress indicators
-- ⚡ Performance statistics
-- 🎯 Organized, readable results
+- Color-coded status messages
+- Real-time progress indicators
+- Performance statistics
+- Organized, readable results
 
 ### Professional HTML Reports
-- 📈 Interactive dashboards
-- 🎨 Modern, gradient design
-- 📱 Responsive layout
-- 🔍 Detailed findings with visual highlighting
+- Interactive dashboards
+- Modern, gradient design
+- Responsive layout
+- Detailed findings with visual highlighting
 
 ---
 
-## 🛠️ Advanced Configuration
+## Advanced Configuration
 
 ### Custom Wordlists
 Place custom wordlists in the `wordlists/` directory:
@@ -213,7 +213,7 @@ Modify scan profiles in `config/profiles/`:
 
 ---
 
-## 📖 Module Details
+## Module Details
 
 ### Port Scanner
 - **Techniques**: TCP Connect
@@ -241,7 +241,7 @@ Modify scan profiles in `config/profiles/`:
 
 ---
 
-## ⚠️ Disclaimer
+## Disclaimer
 
 **IMPORTANT - READ CAREFULLY**
 
@@ -266,7 +266,7 @@ SHINIGAMI-EYE is designed for **EDUCATIONAL PURPOSES** and **AUTHORIZED SECURITY
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please follow these guidelines:
 
@@ -278,13 +278,13 @@ Contributions are welcome! Please follow these guidelines:
 
 ---
 
-## 📜 License
+## License
 
 This project is licensed for **Educational Use Only**. See the `LICENSE` file for details.
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Inspired by tools like Nmap, Nikto, SSLyze, and DNSRecon
 - ASCII art inspired by Naruto and Death Note
@@ -292,17 +292,17 @@ This project is licensed for **Educational Use Only**. See the `LICENSE` file fo
 
 ---
 
-## 📞 Support
+## Support
 
-- 📧 Email: support@shinigami-eye.io
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/shinigami-eye/issues)
-- 💬 Discord: [Join our server](https://discord.gg/shinigami-eye)
+- Email: support@shinigami-eye.io
+- Issues: [GitHub Issues](https://github.com/maaurors/SHINIGAMI-EYE/issues)
+- Discord: [Join our server](https://discord.gg/shinigami-eye)
 
 ---
 
 <div align="center">
 
-**Made with 🔥 by Security Enthusiasts**
+**Made with dedication by Security Enthusiasts**
 
 *神死眼 - The Eye That Sees All*
 

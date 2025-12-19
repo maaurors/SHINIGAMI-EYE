@@ -1,52 +1,41 @@
-# 🚀 SHINIGAMI-EYE - Instrucciones de Despliegue
+# SHINIGAMI-EYE - Installation & Usage Guide
 
-## ¡FRAMEWORK COMPLETADO! 🎉
+## Framework Overview
 
-Tu framework **SHINIGAMI-EYE** (神死眼) ha sido creado exitosamente.
+**SHINIGAMI-EYE** (神死眼) is a comprehensive cybersecurity framework for network reconnaissance and security intelligence gathering.
 
-### 📍 Ubicación Actual
+### Current Location
 
-El framework está en:
+The framework is located at:
 ```
-/Users/maaurors/.gemini/antigravity/playground/final-cassini/SHINIGAMI-EYE
+~/Desktop/SHINIGAMI-EYE
 ```
 
 ---
 
-## 📦 Mover al Desktop
+## Quick Installation
 
-### Opción 1: Comando Simple (Recomendado)
-
-Copia y pega este comando en tu terminal:
-
-```bash
-mv /Users/maaurors/.gemini/antigravity/playground/final-cassini/SHINIGAMI-EYE ~/Desktop/
-```
-
-### Opción 2: Usar Finder
-
-1. Abre Finder
-2. Navega a: `/Users/maaurors/.gemini/antigravity/playground/final-cassini/`
-3. Arrastra la carpeta `SHINIGAMI-EYE` a tu Desktop
-
----
-
-## ⚡ Instalación Rápida
-
-Una vez en el Desktop, ejecuta:
+### On Linux/macOS:
 
 ```bash
 cd ~/Desktop/SHINIGAMI-EYE
 ./install.sh
 ```
 
-Esto instalará todas las dependencias y el framework automáticamente.
+This will automatically install all dependencies and set up the framework.
+
+### On Windows:
+
+```cmd
+cd Desktop\SHINIGAMI-EYE
+install.bat
+```
 
 ---
 
-## 🎨 Demostración Visual
+## Visual Demo
 
-Para ver el impresionante banner animado del Rinnegan **SIN instalar nada**, ejecuta:
+To see the Death Note banner without installing, run:
 
 ```bash
 cd ~/Desktop/SHINIGAMI-EYE
@@ -55,133 +44,116 @@ python3 demo.py
 
 ---
 
-## 🔥 Características Principales
+## Core Features
 
-✨ **SHINIGAMI-EYE** incluye:
+### Port Scanner
+- Multi-threaded TCP scanning (up to 200 threads)
+- Service detection and identification
+- Banner grabbing for fingerprinting
+- Common ports and custom range support
 
-### 🔍 Port Scanner
-- Escaneo TCP multi-hilo (hasta 200 threads)
-- Detección de servicios
-- Banner grabbing
-- Puertos comunes y rangos personalizados
+### Web Reconnaissance
+- Subdomain enumeration
+- Technology detection (CMS, frameworks)
+- Security headers analysis
+- Directory discovery
 
-### 🌐 Web Reconnaissance
-- Enumeración de subdominios
-- Detección de tecnologías (CMS, frameworks)
-- Análisis de cabeceras de seguridad
-- Descubrimiento de directorios
+### SSL/TLS Analyzer
+- Certificate inspection
+- Vulnerability detection (Heartbleed, POODLE, BEAST)
+- Cipher analysis
+- Expiration validation
 
-### 🔐 SSL/TLS Analyzer
-- Inspección de certificados
-- Detección de vulnerabilidades (Heartbleed, POODLE, BEAST)
-- Análisisde cifrado
-- Validación de expiración
-
-### 📊 DNS Enumerator
-- Consulta de todos los registros DNS
-- Intentos de transferencia de zona (AXFR)
+### DNS Enumerator
+- Comprehensive DNS record queries
+- Zone transfer attempts (AXFR)
 - Reverse DNS lookups
-- Validación DNSSEC
+- DNSSEC validation
 
-### 📄 Sistema de Reportes
-- Reportes HTML interactivos
-- Export JSON estructurado
-- Documentación Markdown
+### Reporting System
+- Interactive HTML reports
+- Structured JSON export
+- Markdown documentation
 
 ---
 
-## 📚 Uso Básico
+## Basic Usage
 
-Después de la instalación:
+After installation:
 
 ```bash
-# Ver ayuda
+# View help
 shinigami-eye --help
 
-# Escaneo rápido de puertos
+# Quick port scan
 shinigami-eye portscan -t scanme.nmap.org --common
 
-# Reconocimiento web
-shinigami-eye webrecon -d ejemplo.com
+# Web reconnaissance
+shinigami-eye webrecon -d example.com
 
-# Análisis SSL/TLS
-shinigami-eye ssl -H ejemplo.com
+# SSL/TLS analysis
+shinigami-eye ssl -H example.com
 
-# Enumeración DNS
-shinigami-eye dns -d ejemplo.com
+# DNS enumeration
+shinigami-eye dns -d example.com
 
-# Escaneo completo con reporte HTML
-shinigami-eye full -t ejemplo.com -o reporte.html
+# Full scan with HTML report
+shinigami-eye full -t example.com -o report.html
 ```
 
 ---
 
-## 🎯 Perfiles de Escaneo
+## Scan Profiles
 
-SHINIGAMI-EYE incluye perfiles pre-configurados:
+SHINIGAMI-EYE includes pre-configured scanning profiles:
 
-- **Stealth**: Lento y sigiloso, mínima detección
-- **Aggressive**: Rápido y completo, máxima velocidad  
-- **Complete**: Cobertura máxima, todos los puertos
-
----
-
-## 📖 Documentación
-
-- `README.md` - Documentación completa
-- `walkthrough.md` - Detalles de implementación
-- `config/` - Archivos de configuración
-- `wordlists/` - Listas de palabras para ataques
+- **Stealth**: Slow and stealthy, minimal detection
+- **Aggressive**: Fast and comprehensive, maximum speed  
+- **Complete**: Maximum coverage, all ports
 
 ---
 
-## ⚠️ DISCLAIMER LEGAL
+## Documentation
 
-**IMPORTANTE**: SHINIGAMI-EYE es para **USO EDUCATIVO** y **PRUEBAS AUTORIZADAS** únicamente.
-
-- ✅ Solo escanea sistemas que posees o tienes permiso explícito para probar
-- ✅ Cumple con todas las leyes aplicables
-- ❌ NO uses para actividades ilegales o maliciosas
-
-**El acceso no autorizado a sistemas informáticos es ILEGAL.**
+- `README.md` - Complete documentation
+- `config/` - Configuration files
+- `wordlists/` - Wordlists for attacks
 
 ---
 
-## 🌟 Ventajas sobre PARANOID
+## Legal Disclaimer
 
-SHINIGAMI-EYE supera a PARANOID en:
+**IMPORTANT**: SHINIGAMI-EYE is for **EDUCATIONAL USE** and **AUTHORIZED TESTING** only.
 
-- 🎨 **Diseño Visual**: ASCII art épico inspirado en anime
-- 🔥 **Más Módulos**: 4 módulos completos vs básico
-- 📊 **Reportes Profesionales**: HTML, JSON, Markdown
-- 🌐 **Multi-Plataforma**: Windows, Linux, macOS
-- ⚡ **Mejor Performance**: Threading optimizado
-- 📖 **Documentación**: Completa y profesional
-- 🔧 **Configuración**: Perfiles YAML flexibles
+- ✅ Only scan systems you own or have explicit permission to test
+- ✅ Comply with all applicable laws and regulations
+- ❌ DO NOT use for illegal or malicious activities
+
+**Unauthorized access to computer systems is ILLEGAL.**
 
 ---
 
-## 🎉 ¡Listo para Usar!
+## Framework Status
 
-Tu framework es:
-- ✅ 100% funcional
-- ✅ Completamente documentado
-- ✅ Listo para desplegar
-- ✅ Multiplataforma
-- ✅ Único y potente
-
----
-
-## 💬 Contacto y Soporte
-
-Si tienes preguntas o problemas:
-
-1. Lee el `README.md` completo
-2. Revisa el `walkthrough.md` para detalles técnicos
-3. Prueba el `demo.py` para verificar que todo funciona
+The framework is:
+- ✅ 100% functional
+- ✅ Fully documented
+- ✅ Ready to deploy
+- ✅ Multi-platform
+- ✅ Production-ready
 
 ---
 
-**神死眼 - El Ojo que Todo lo Ve**
+## Support
 
-*Creado con ❤️ y Antigravity AI*
+If you have questions or issues:
+
+1. Read the complete `README.md`
+2. Check the configuration files in `config/`
+3. Test with `demo.py` to verify functionality
+
+---
+
+**神死眼 - The Eye That Sees All**
+
+*Created for educational and authorized security testing purposes*
