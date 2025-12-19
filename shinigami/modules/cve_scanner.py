@@ -213,13 +213,14 @@ class CVEScanner:
         return ""
     
     def _query_nvd(self, product: str, version: str) -> List[CVE]:
-        """Query NVD API for CVEs"""
+        """Query NVD API for CVEs using keyword search"""
         try:
-            # Build CPE string
-            cpe = f"cpe:2.3:a:*:{product}:{version}:*:*:*:*:*:*:*"
+            # Use keyword search instead of CPE (more reliable)
+            # Construct search query
+            search_terms = f"{product} {version}".strip()
             
             params = {
-                'cpeName': cpe,
+                'keywordSearch': search_terms,
                 'resultsPerPage': 20
             }
             
@@ -241,7 +242,37 @@ class CVEScanner:
                 
                 # Get description
                 descriptions = cve_data.get('descriptions', [])
-                description = descriptions[0].get('value', '') if descriptions else ''
+                description = ''
+                for desc in descriptions:
+                    if desc.get('lang') == 'en':
+                        description = desc.get('value', '')
+                        break
+                if not description and descriptions:
+                    description = descriptions[0].get('value', '')
+                
+                # Filter by relevance (check if product/version mentioned)
+                # Make this less strict - check description OR product name match
+                description_lower = description.lower()
+                product_lower = product.lower()
+                
+                # Check if product is mentioned
+                product_mentioned = (
+                    product_lower in description_lower or
+                    product.replace('_', ' ').lower() in description_lower or
+                    self._normalize_product_name(product).lower() in description_lower
+                )
+                
+                # Check if version is mentioned (more lenient)
+                version_mentioned = (
+                    version in description_lower or
+                    version in cve_id or
+                    f"version {version}" in description_lower or
+                    f"versions {version}" in description_lower
+                )
+                
+                # Skip if neither product nor version is relevant
+                if not product_mentioned and not version_mentioned:
+                    continue
                 
                 # Get CVSS score
                 metrics = cve_data.get('metrics', {})
@@ -253,10 +284,19 @@ class CVEScanner:
                     cvss_data = metrics['cvssMetricV31'][0]['cvssData']
                     cvss_score = cvss_data.get('baseScore', 0.0)
                     severity = cvss_data.get('baseSeverity', 'UNKNOWN')
+                # Fall back to CVSS v3.0
+                elif 'cvssMetricV30' in metrics and metrics['cvssMetricV30']:
+                    cvss_data = metrics['cvssMetricV30'][0]['cvssData']
+                    cvss_score = cvss_data.get('baseScore', 0.0)
+                    severity = cvss_data.get('baseSeverity', 'UNKNOWN')
                 # Fall back to CVSS v2
                 elif 'cvssMetricV2' in metrics and metrics['cvssMetricV2']:
                     cvss_score = metrics['cvssMetricV2'][0]['cvssData'].get('baseScore', 0.0)
                     severity = self._cvss_to_severity(cvss_score)
+                
+                # Only include if we have a score
+                if cvss_score == 0.0:
+                    continue
                 
                 # Get references
                 references = []
@@ -277,7 +317,10 @@ class CVEScanner:
                 
                 cves.append(cve)
             
-            return cves
+            # Sort by CVSS score (highest first)
+            cves.sort(key=lambda x: x.cvss_score, reverse=True)
+            
+            return cves[:10]  # Return top 10
             
         except Exception as e:
             print(f"NVD API error: {e}")
