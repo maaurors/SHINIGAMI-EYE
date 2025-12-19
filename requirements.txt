@@ -9,6 +9,7 @@ beautifulsoup4>=4.11.0
 lxml>=4.9.0
 colorama>=0.4.6
 jinja2>=3.1.2
+PyYAML>=6.0
 
 # v2.0 Enhancements
 
