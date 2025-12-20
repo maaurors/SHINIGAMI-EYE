@@ -3,10 +3,10 @@
 <div align="center">
 
 ![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
+![PyPI](https://img.shields.io/pypi/v/shinigami-eye.svg)
 ![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)
-![License](https://img.shields.io/badge/license-Educational-red.svg)
-![Python](https://img.shields.io/badge/python-3.8%2B-blue.svg)
-![License](https://img.shields.io/badge/license-Educational-red.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+
 
 **The All-Seeing Cybersecurity Framework**
 
@@ -85,18 +85,32 @@
 
 ## Installation
 
-### Prerequisites
-- Python 3.8 or higher
-- pip (Python package manager)
+### Recommended: Install from PyPI
 
-### Quick Install
+```bash
+pip install shinigami-eye
+```
+
+That's it! Now you can use `shinigami-eye` from anywhere.
+
+### Alternative: Install from Source
+
+#### Prerequisites
+- Python 3.8.1 or higher
+- pip (Python package manager)
 
 #### On Linux/macOS:
 ```bash
 git clone https://github.com/maaurors/SHINIGAMI-EYE.git
 cd SHINIGAMI-EYE
-chmod +x install.sh
-./install.sh
+pip install -e .
+```
+
+#### On Windows:
+```cmd
+git clone https://github.com/maaurors/SHINIGAMI-EYE.git
+cd SHINIGAMI-EYE
+pip install -e .
 ```
 
 #### On Windows:
